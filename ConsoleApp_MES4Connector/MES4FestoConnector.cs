@@ -904,8 +904,15 @@ namespace ClassLibNETStand_MES4FestoConnector
         }
 
         /// <summary>
-        /// Handles the continuous sending of status messages.
+        /// Handles the continuous sending of status messages in a loop.
+        /// This method is designed to run in a separate thread and continuously sends status messages at regular intervals.
         /// </summary>
+        /// <remarks>
+        /// The loop continues until the object is disposed. In each iteration, the method ensures the connection is active,
+        /// sends a status message, and then pauses for a defined interval.
+        /// </remarks>
+        /// <exception cref="ThreadInterruptedException">Thrown when the thread executing the loop is interrupted, typically during shutdown or disposal of the object.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the connection cannot be ensured. This could be due to connection issues.</exception>
         private void SendStatusMessagesLoop()
         {
             while (!disposed)
@@ -931,8 +938,10 @@ namespace ClassLibNETStand_MES4FestoConnector
 
         /// <summary>
         /// Stops the thread responsible for sending status messages to the MES system.
+        /// This method is designed to safely terminate the StatusMessageThread, ensuring that it ceases its operations
+        /// and that all associated resources are properly released.
         /// </summary>
-        /// <exception cref="DisconnectException">Thrown when there is an issue stopping the StatusMessageThread.</exception>
+        /// <exception cref="DisconnectException">Thrown when there is an issue stopping the StatusMessageThread, such as a thread interruption.</exception>
         private void StopStatusMessageThread()
         {
             if (StatusMessageThread != null && StatusMessageThread.IsAlive)
@@ -1330,10 +1339,16 @@ namespace ClassLibNETStand_MES4FestoConnector
 
         /// <summary>
         /// Validates the integrity and consistency of parsed header data.
+        /// This method checks if the header data from the XML file is correctly formatted and contains all necessary information.
+        /// It ensures that each header data item has a sequential ID and a valid parameter name.
         /// </summary>
         /// <param name="headerData">The header data to validate.</param>
-        /// <param name="IDpointer">A reference to the expected ID counter for validation.</param>
-        /// <param name="filePath">The file path of the XML header for error messaging.</param>
+        /// <param name="IDpointer">A reference to the expected ID counter for validation. This counter is incremented after successful validation.</param>
+        /// <param name="filePath">The file path of the XML header, used for error messaging.</param>
+        /// <exception cref="HeaderInterpretationException">
+        /// Thrown when the ID of the header data does not match the expected sequence or when the parameter name is missing.
+        /// The exception message includes details about the specific issue and the file path for easier troubleshooting.
+        /// </exception>
         private static void ValidateHeaderData(HeaderData headerData, ref int IDpointer, string filePath)
         {
             if (headerData.ID != IDpointer)
@@ -1404,6 +1419,7 @@ namespace ClassLibNETStand_MES4FestoConnector
                     catch (ThreadInterruptedException)
                     {
                         // Behandlung spezifischer Thread-Unterbrechungsprobleme
+                        // keine
                     }
                     catch (Exception) { }
                 }

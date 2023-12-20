@@ -76,7 +76,8 @@ namespace ClassLibNETStand_MES4FestoConnector
             _ResourceStatus = resourceStatus ?? throw new ArgumentNullException(nameof(resourceStatus));
 
 
-            //Header initialisieren
+            // Header intialization
+
             try
             {
                 HeaderGetDic = InterpretXMLHeader(@"MES_config\HeaderGet.xml");
@@ -88,7 +89,6 @@ namespace ClassLibNETStand_MES4FestoConnector
             }
             catch (Exception ex)
             {
-                // Fange andere mögliche Ausnahmen
                 throw new InvalidOperationException("An unexpected error occurred during header initialization.", ex);
             }
         }
@@ -123,6 +123,8 @@ namespace ClassLibNETStand_MES4FestoConnector
 
         /// <summary>
         /// Defines the types of PLC (Programmable Logic Controller) used.
+        /// LittleEndian = CodeSys
+        /// BigEndian = Siemens
         /// </summary>
         public enum PLCType
         {
@@ -137,7 +139,7 @@ namespace ClassLibNETStand_MES4FestoConnector
         #region Subclasses
 
         /// <summary>
-        /// Represents a header data structure used in communication.
+        /// Represents a header data structure used in service calls.
         /// </summary>
         class HeaderData
         {
@@ -169,7 +171,13 @@ namespace ClassLibNETStand_MES4FestoConnector
             /// Gets the C# equivalent type for the MES parameter type.
             /// </summary>
             /// <returns>The C# type equivalent to the MES parameter type.</returns>
-            public Type GetCSType()
+            /// <exception cref="ArgumentException">
+            /// Thrown when the Type is not supported.
+            /// This method currently supports the following Types:
+            /// 1 for Int16, 2 for Int32, and 3 for string.
+            /// Any other Type value will cause this exception to be thrown.
+            /// </exception>
+            internal Type GetCSType()
             {
                 return Type switch
                 {
@@ -183,21 +191,72 @@ namespace ClassLibNETStand_MES4FestoConnector
 
         /// <summary>
         /// Represents the status of the resource, including modes and error flags.
+        /// The status will be coded into a byte array and transferred every 1000 millisecons to the MES when given as ref parameter to the MES4FestoConnector Constructor.
         /// </summary>
-        public class Status(Status.Mode ResourceMode = Status.Mode.AutoMode, bool Busy = false, bool Reset = false, bool MESMode = true)
+        public class Status
         {
+            /// <summary>
+            /// Initializes a new instance of the Status class.
+            /// </summary>
+            /// <param name="resourceMode">The mode of the resource. Default is AutoMode.</param>
+            /// <param name="busy">Indicates whether the resource is busy. Default is false.</param>
+            /// <param name="reset">Indicates whether the resource needs to be reset. Default is false.</param>
+            /// <param name="mESMode">Indicates whether the resource is in MES mode. Default is true.</param>
+            /// <remarks>
+            /// The Status class represents the state of a resource, including its mode, busy state, reset state, and MES mode.
+            /// </remarks>
+            public Status(Status.Mode resourceMode = Status.Mode.AutoMode, bool busy = false, bool reset = false, bool mESMode = true)
+            {
+                ResourceMode = resourceMode;
+                Busy = busy;
+                Reset = reset;
+                MESMode = mESMode;
+            }
+
+
             // Definitions and properties of the Status class
+            /// <summary>
+            /// Defines the modes of operation for a resource.
+            /// </summary>
             public enum Mode
             {
+                /// <summary>
+                /// Indicates the resource is operating in automatic mode.
+                /// </summary>
                 AutoMode,
+
+                /// <summary>
+                /// Indicates the resource is operating in manual mode.
+                /// </summary>
                 ManualMode
             }
 
-            private Mode ResourceMode { get; set; } = ResourceMode;
-            private bool Busy { get; set; } = Busy;
-            private bool Reset { get; set; } = Reset;
-            private bool[] ErrorFlags { get; set; } = [false, false, false];
-            private bool MESMode { get; set; } = MESMode;
+            /// <summary>
+            /// Gets or sets the current mode of the resource.
+            /// </summary>
+            private Mode ResourceMode { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether the resource is currently busy.
+            /// </summary>
+            private bool Busy { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether the resource needs to be reset.
+            /// </summary>
+            private bool Reset { get; set; }
+
+            /// <summary>
+            /// An array representing error flags for the resource. Each element in the array indicates a specific type of error.
+            /// There are 3 bool values to be set as error flags.
+            /// </summary>
+            private bool[] ErrorFlags { get; set; } = new bool[3] { false, false, false };
+
+            /// <summary>
+            /// Gets or sets a value indicating whether the resource is in MES (Manufacturing Execution System) mode.
+            /// </summary>
+            private bool MESMode { get; set; }
+
 
 
             /// <summary>
@@ -303,25 +362,52 @@ namespace ClassLibNETStand_MES4FestoConnector
 
 
             // Service Parameters
+            /// <summary>
+            /// Gets the message class identifier for the service package.
+            /// </summary>
+            /// <value>The message class identifier, represented as an Int16.</value>
             public Int16 MClass { get; }
+
+            /// <summary>
+            /// Gets the message number for the service package.
+            /// </summary>
+            /// <value>The message number, represented as an Int16.</value>
             public Int16 MNo { get; }
+
+            /// <summary>
+            /// Gets the error state for the service package.
+            /// </summary>
+            /// <value>The error state, represented as an Int16, where 0 means that there is no error</value>
             public Int16 ErrorState { get; }
+
+            /// <summary>
+            /// Gets the dictionary of standard parameters associated with the service package.
+            /// </summary>
+            /// <value>A dictionary of standard parameters, where each parameter is represented as a key-value pair with the key as a string and the value as an object.</value>
             public Dictionary<string, object> StandardParameters { get; }
+
+            /// <summary>
+            /// Gets the dictionary of service-specific parameters associated with the service package.
+            /// </summary>
+            /// <value>A dictionary of service-specific parameters, where each parameter is represented as a key-value pair with the key as a string and the value as an object.</value>
             public Dictionary<string, object> ServiceSpecificParameters { get; }
+
 
 
             // Constructor for Request
 
             /// <summary>
             /// Initializes a new instance of the ServicePackage class for sending a request.
+            /// This constructor creates a service package for communication with the MES system.
             /// </summary>
             /// <param name="Connector">The MES4FestoConnector instance associated with this package.</param>
-            /// <param name="MClass">The class of the message.</param>
-            /// <param name="MNo">The message number.</param>
-            /// <param name="ErrorState">The error state.</param>
-            /// <param name="StandardParameters">The standard parameters for the message.</param>
-            /// <param name="ServiceSpecificParameters">The service-specific parameters for the message.</param>
-
+            /// <param name="MClass">The class of the message, represented as an Int16.</param>
+            /// <param name="MNo">The message number, represented as an Int16.</param>
+            /// <param name="ErrorState">The error state of the message, represented as an Int16.</param>
+            /// <param name="StandardParameters">A dictionary containing the standard parameters for the message. Each parameter should be either an Int16, Int32, or string.</param>
+            /// <param name="ServiceSpecificParameters">A dictionary containing the service-specific parameters for the message. Each parameter should be either an Int16, Int32, or string.</param>
+            /// <exception cref="ArgumentNullException">Thrown when the 'Connector' parameter is null.</exception>
+            /// <exception cref="ArgumentException">Thrown when 'StandardParameters' or 'ServiceSpecificParameters' contain types other than Int16, Int32, or string.</exception>
             public ServicePackage(MES4FestoConnector Connector, Int16 MClass, Int16 MNo, Int16 ErrorState, Dictionary<string, object> StandardParameters, Dictionary<string, object> ServiceSpecificParameters)
             {
                 if (Connector is null) throw new ArgumentNullException(nameof(Connector));
@@ -354,9 +440,13 @@ namespace ClassLibNETStand_MES4FestoConnector
 
             /// <summary>
             /// Initializes a new instance of the ServicePackage class for receiving a response.
+            /// This constructor parses a data string to extract service package information.
             /// </summary>
             /// <param name="Connector">The MES4FestoConnector instance associated with this package.</param>
-            /// <param name="DataString">The raw data string of the response.</param>
+            /// <param name="DataString">The raw data string representing the response from the MES system.</param>
+            /// <exception cref="ArgumentNullException">Thrown when the 'Connector' parameter is null.</exception>
+            /// <exception cref="ArgumentException">Thrown when the input data string is null, empty, or contains duplicate keys.</exception>
+            /// <exception cref="FormatException">Thrown when the data string has an invalid key-value pair format.</exception>
             internal ServicePackage(MES4FestoConnector Connector, string DataString)
             {
                 if (Connector is null) throw new ArgumentNullException(nameof(Connector));
@@ -464,9 +554,13 @@ namespace ClassLibNETStand_MES4FestoConnector
 
             /// <summary>
             /// Creates a string representation of the service request for communication.
+            /// This method constructs a string that encapsulates all the necessary details for a service request,
+            /// including the message class, message number, error state, and other parameters.
             /// </summary>
             /// <param name="Connector_sender">The sender's MES4FestoConnector instance.</param>
-            /// <returns>A string representing the service request.</returns>
+            /// <returns>A string representing the service request, formatted for communication with the MES system.</returns>
+            /// <exception cref="ArgumentNullException">Thrown when the 'Connector_sender' parameter is null.</exception>
+            /// <exception cref="ArgumentException">Thrown when any of the values in 'StandardParameters' are not of type Int16, Int32, or string.</exception>
             public string CreateServiceRequestString(MES4FestoConnector Connector_sender)
             {
                 if (Connector_sender is null) throw new ArgumentNullException(nameof(Connector_sender));
@@ -735,8 +829,11 @@ namespace ClassLibNETStand_MES4FestoConnector
 
         /// <summary>
         /// Establishes connections to the MES system for status and service communication.
-        /// Starts the sending of cyclic status messages every 1000 millisecons, specified in the ref Status variable transferred in the constructor.
         /// </summary>
+        /// <exception cref="SocketException">Thrown when a socket error occurs during the connection process.</exception>
+        /// <exception cref="IOException">Thrown when an I/O error occurs during the connection process.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown when the operation is performed on a disposed object.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when an invalid operation occurs during the connection process.</exception>
         public void Connect()
         {
             try
@@ -782,8 +879,8 @@ namespace ClassLibNETStand_MES4FestoConnector
 
         /// <summary>
         /// Disconnects from the MES system and cleans up resources.
-        /// Stops the cyclic status message transfer.
         /// </summary>
+        /// <exception cref="DisconnectException">Thrown when there is an issue stopping the StatusMessageThread or closing the TCP client or stream.</exception>
         public void Disconnect()
         {
             StopStatusMessageThread();
@@ -909,6 +1006,7 @@ namespace ClassLibNETStand_MES4FestoConnector
         /// </summary>
         /// <param name="servicePackage">The service package containing the request details.</param>
         /// <returns>A new ServicePackage containing the response from the MES system.</returns>
+        /// <exception cref="ServiceCallFailedException">Thrown when there is an issue with the TCP connection/stream or during the service call process.</exception>
         public ServicePackage CallService(ServicePackage servicePackage)
         {
             if (serviceStream is null || serviceTCPClient is null || !serviceTCPClient.Connected)
@@ -1060,6 +1158,7 @@ namespace ClassLibNETStand_MES4FestoConnector
         /// <summary>
         /// Re-establishes connections to the MES system if they have been lost.
         /// </summary>
+        /// <exception cref="ReconnectException">Thrown when a socket or I/O error occurs during reconnection.</exception>
         private void Reconnect()
         {
             try
@@ -1160,6 +1259,9 @@ namespace ClassLibNETStand_MES4FestoConnector
         /// </summary>
         /// <param name="filePath">The file path of the XML header.</param>
         /// <returns>An OrderedDictionary containing the interpreted header data.</returns>
+        /// <exception cref="XmlException">Thrown when there is an error in parsing the XML file.</exception>
+        /// <exception cref="IOException">Thrown when an I/O error occurs while accessing the file.</exception>
+        /// <exception cref="HeaderInterpretationException">Thrown when the header data cannot be correctly interpreted or if there is a format issue with the XML file.</exception>
         private static OrderedDictionary InterpretXMLHeader(string filePath)
         {
             OrderedDictionary headerList = new OrderedDictionary();

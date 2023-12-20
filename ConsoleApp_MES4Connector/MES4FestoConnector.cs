@@ -671,7 +671,7 @@ namespace ClassLibNETStand_MES4FestoConnector
         }
 
         /// <summary>
-        /// Represents an exception that occurs during service call in the MES4FestoConnector class.
+        /// Represents an exception that occurs during service calls in the MES4FestoConnector class.
         /// </summary>
         [Serializable]
         internal class ServiceCallFailedException : Exception

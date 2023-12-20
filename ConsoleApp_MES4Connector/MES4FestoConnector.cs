@@ -1240,7 +1240,7 @@ namespace ClassLibNETStand_MES4FestoConnector
         /// <summary>
         /// Creates a status message byte array based on the current status of the resource.
         /// </summary>
-        /// <returns>A byte array representing the current status message.</returns>
+        /// <returns>A byte array representing the current status massage.</returns>
         private byte[] CreateStatusMessage()
         {
             byte[] message = new byte[4];

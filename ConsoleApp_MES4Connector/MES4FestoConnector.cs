@@ -7,6 +7,7 @@ namespace ClassLibNETStand_MES4FestoConnector
 {
     // v1.0
 
+
     /// <summary>
     /// Represents a connector to communicate with the MES system of Festo. 
     /// This class provides functionalities to connect, send and receive messages, and handle service packages.

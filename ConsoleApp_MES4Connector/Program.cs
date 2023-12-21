@@ -28,7 +28,7 @@ namespace ConsoleApp_MES4Connector
 
 
 
-
+            Connector.Dispose();
 
 
 
@@ -126,11 +126,6 @@ namespace ConsoleApp_MES4Connector
 
                 return binaryString.ToString().Trim();
             }
-        }
-
-        private static void Connector_ServiceRequestSent(object? sender, MES4FestoConnector.ServiceRequestSentEventArgs e)
-        {
-
         }
     }
 

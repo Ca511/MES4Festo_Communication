@@ -116,6 +116,8 @@ namespace ClassLibNETStand_MES4FestoConnector
             }
         }
 
+        public Int16 Resource_ID { get; } 
+
 
         #endregion
 

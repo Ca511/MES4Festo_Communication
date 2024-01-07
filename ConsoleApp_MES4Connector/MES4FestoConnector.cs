@@ -63,6 +63,10 @@ namespace ClassLibNETStand_MES4FestoConnector
         /// <param name="resourceStatus">The initial status of the resource.</param>
         /// <param name="mESStatusPort">The port used for MES status communication. Default is 2001.</param>
         /// <param name="mESServicePort">The port used for MES service communication. Default is 2000.</param>
+        /// <exception cref="ArgumentException">Thrown when the MES host address is null or empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the resource status is null.</exception>
+        /// <exception cref="HeaderInterpretationException">Thrown when there is a failure in interpreting the XML headers for the communication.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when there is an unexpected error during the initialization of the header, or when XML header interpretation fails.</exception>
         public MES4FestoConnector(string mESHost, UInt16 resourceID, PLCType resourcePLCType, bool isResource, ref Status resourceStatus, int mESStatusPort = 2001, int mESServicePort = 2000)
         {
             if (string.IsNullOrEmpty(mESHost))

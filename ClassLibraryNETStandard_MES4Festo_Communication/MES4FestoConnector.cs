@@ -474,7 +474,7 @@ namespace ClassLibNETStand_MES4FestoConnector
 
                     foreach (var eps in ExtractedParameterStrings)
                     {
-                        Type type = GetTypeOfParameter(eps);
+                        Type type = GetTypeOfParameter();
 
                         if (HeaderGetDic.Contains(eps.Key))
                             StandardParameters.Add(eps.Key, Convert.ChangeType(eps.Value, type));
@@ -492,6 +492,8 @@ namespace ClassLibNETStand_MES4FestoConnector
 
                 Dictionary<string, object> ExtractDataLongEncoding(string input)
                 {
+                    input.Remove(0, 4);
+
                     var dataDictionary = new Dictionary<string, object>();
 
                     if (string.IsNullOrEmpty(input))
@@ -548,6 +550,21 @@ namespace ClassLibNETStand_MES4FestoConnector
                     else
                         return typeof(object);
 
+                }
+
+                Type GetTypeOfParameter(short type_identifer)
+                {
+                        switch (value)
+                        {
+                            case 1:
+                                return typeof(Int16);
+                            case 2:
+                                return typeof(Int32);
+                            case 3:
+                                return typeof(string);
+                            default:
+                                throw new ArgumentException("Incorrect value. It must be 1, 2 or 3.");
+                        }
                 }
             }
 
@@ -1231,11 +1248,9 @@ namespace ClassLibNETStand_MES4FestoConnector
             SafeDispose(serviceTCPClient);
 
             statusTCPClient = new TcpClient(MES4Host, MES4StatusPort);
-            statusTCPClient.Connect(MES4Host, MES4StatusPort);
             statusStream = statusTCPClient.GetStream();
 
             serviceTCPClient = new TcpClient(MES4Host, MES4ServicePort);
-            serviceTCPClient.Connect(MES4Host, MES4ServicePort);
             serviceStream = serviceTCPClient.GetStream();
         }
 

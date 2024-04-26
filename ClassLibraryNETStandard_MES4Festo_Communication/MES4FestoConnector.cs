@@ -474,7 +474,7 @@ namespace ClassLibNETStand_MES4FestoConnector
 
                     foreach (var eps in ExtractedParameterStrings)
                     {
-                        Type type = GetTypeOfParameter();
+                        Type type = GetTypeOfParameter(eps);
 
                         if (HeaderGetDic.Contains(eps.Key))
                             StandardParameters.Add(eps.Key, Convert.ChangeType(eps.Value, type));

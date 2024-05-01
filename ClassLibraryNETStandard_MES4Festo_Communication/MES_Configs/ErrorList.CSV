@@ -1,0 +1,64 @@
+id;de;eng
+0;Kein Fehler;No error
+1;"Unbekannter Fehler!";"Unknown Error!"
+10;"Kein Werkstück auf Warenträger 1 vorhanden";"No workpiece at conveyor 1 available !"
+100;"Auftrag fehlerhaft abgebrochen!";"Order aborted with errors!"
+1001;"Keine Palette auf Warenträger !";"No palette on carrier available !"
+1002;"Frontschale ist bereits vorhanden !";"Front cover is already present !"
+1003;"Rückschale ist bereits vorhanden !";"Back cover is already present !"
+1004;"Frontschale ist nicht vorhanden !";"Front cover is not available !"
+1005;"Rückschale ist nicht vorhanden !";"Back cover is not available !"
+1006;"Frontschale ist nicht korrekt eingelegt !";"Front cover has wrong orientation !"
+1007;"Kein Werkstück vorhanden !";"No workpiece available!"
+1008;"Werkstück-Orientierung nicht korrekt!";"Workpiece orientation not correct!"
+1009;<No value>;<No value> 1010;"Falscher Parameter für das Bohrprogramm!";"Wrong parameter for drilling program!"
+1011;<No value>;<No value>
+1020;Magazin ist leer!;Magazine is empty!
+1040;"Höhenmessung 1: Kein Teil detektiert!";"Measuring of height 1: No workpiece detected!"
+1041;"Höhenmessung 2: Kein Teil detektiert!";"Measuring of height 2: No workpiece detected!"
+1050;"Kamera ist nicht in Online Mode !";"Camera is not in Online Mode !"
+1051;"Kamera ist nicht bereit !";"Camera is not ready !"
+1060;"Saugplatte ist belegt, bitte Etikett entfernen!";"Suction plate is occupied, please remove label!"
+1070;Referenzieren wurde nicht beendet!;Referencing did not finish!
+1071;Positionieren wurde nicht beendet!;Positioning did not finish!
+1072;"Kein Teil auf Ablagerutsche detektiert!";"No part on deposit slide detected!"
+1073;"Falscher Parameter fuer dieAblageposition!";"Wrong parameter for deposit position!"
+1074;"Start nicht möglich, da Ablageposition belegt!";"Start not possible, deposit position is occupied!"
+11;"Unbekannter Greifer!";"Unknown tool type gripped!"
+1100;"Parameter für Quell- oder Zielposition nicht korrekt !";"Parameter for source or target position not correct !"
+12;<No value>;<No value>
+13;<No value>;<No value>
+14;<No value>;<No value>
+15;<No value>;<No value>
+16;<No value>;<No value>
+17;<No value>;<No value>
+18;<No value>;<No value>
+20;"Kamera ist nicht  in Online Mode !";"Camera is not in Online Mode !"
+21;"Stopper Nummer ist nicht bekannt !";"Undefinied stopper number!"
+22;"Unbekannte Programmnummer!";"Unknown program number!"
+23;"Kein Werkstück auf der Palette am Stopper!";"No workpiece on the pallet at stopper!"
+30;<No value>;<No value>
+31;"Kamerainspektion kein Werkstück detektiert!";"Camera found no workpiece!"
+32;<No value>;<No value>
+33;<No value>;<No value>
+34;<No value>;<No value>
+35;<No value>;<No value>
+40;Falscher Greifertyp!;"Carrier already occupied!"
+41;"Werkstückmontageplatz belegt!";"Workpiece assembly position occupied!"
+42;"Werkstück nicht auf Montageplatz abgelegt!";"No workpiece placed on assembly position!"
+43;"Werkstück verkehrt auf Montageplatz abgelegt!";"Workpiece upside down placed on assembly position!"
+44;"Werkstück-Orientierung nicht korrekt!";"Workpiece orientation not correct!"
+45;Keine Platine im Werkstück gefunden!;No PCB found inside the workpiece
+50;<No value>;<No value>
+5030;Heiztemperatur nicht erreichbar !;Heating temperature not reachable !
+5040;"Messwert liegt außerhalb der definierten Grenzen !";"Measured value is out of defined range!"
+5050;"Qualitätsprüfung fehlgeschlagen !";"Quality check failed !"
+5051;<No value>;<No value>
+51;<No value>;<No value>
+52;"Unbekannter Palettenplatz für die Platine!";"Unknow PCB pallet number!"
+53;"Keine Platine gefunden am verlangten Palettenplatz!";"No PCB found at the ordered pallet number!"
+60;<No value>;<No value>
+61;<No value>;<No value>
+62;<No value>;<No value>
+63;"Alle Sicherungs-Magazine sind leer!";"All fuse magazines are empty!"
+90;"Solltemperatur ist kleiner als Umgebungstemperatur!";"Nominal temperature is lower than actual temperature!"

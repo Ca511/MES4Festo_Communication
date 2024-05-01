@@ -1,0 +1,37 @@
+<?xml version="1.0" standalone="yes"?>
+<dsConfig xmlns="http://tempuri.org/dsConfig.xsd">
+  <Config>
+    <ID>0</ID>
+    <DeleteOrders>false</DeleteOrders>
+    <DeleteOrderFin>false</DeleteOrderFin>
+    <DeleteBuffers>false</DeleteBuffers>
+    <CommunicateOnStart>true</CommunicateOnStart>
+    <Port1>2000</Port1>
+    <Clients1>32</Clients1>
+    <Port2>2001</Port2>
+    <Clients2>32</Clients2>
+    <RefreshTime>5000</RefreshTime>
+    <Logfile>false</Logfile>
+    <StartWindows />
+    <RepairDatabase>true</RepairDatabase>
+    <dbPath>mes4</dbPath>
+    <GenOrdersActive>false</GenOrdersActive>
+    <User>2</User>
+    <HotFolder>C:\MES4\Orders</HotFolder>
+    <ChooseDb>false</ChooseDb>
+    <MySQL>true</MySQL>
+	<Background>false</Background>
+  </Config>
+  <ConfigONo>
+    <nextONo>2652</nextONo>
+    <minONo>2000</minONo>
+    <maxONo>999999</maxONo>
+    <Step>1</Step>
+  </ConfigONo>
+  <ConfigMySQL>
+    <host>localhost</host>
+    <user>root</user>
+    <password>Festo4.0</password>
+    <db>mes4</db>
+  </ConfigMySQL>
+</dsConfig>

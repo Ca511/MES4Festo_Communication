@@ -1406,6 +1406,7 @@ namespace ClassLibNETStand_MES4FestoConnector
             }
         }
 
+
         /// <summary>
         /// Disposes the specified resource safely, handling any exceptions that might occur.
         /// </summary>

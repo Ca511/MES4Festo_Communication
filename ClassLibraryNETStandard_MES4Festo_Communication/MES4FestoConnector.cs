@@ -118,7 +118,7 @@ namespace ClassLibNETStand_MES4FestoConnector
             }
         }
 
-        public UInt16 Resource_ID { get { return ResourceID; } } 
+        public UInt16 Resource_ID { get { return ResourceID; } }
 
 
         #endregion
@@ -476,7 +476,7 @@ namespace ClassLibNETStand_MES4FestoConnector
                     {
                         Type type = GetTypeOfParameter(eps);
 
-                        if (HeaderGetDic.Contains(eps.Key))
+                        if (HeaderSendDic.Contains(eps.Key))
                             StandardParameters.Add(eps.Key, Convert.ChangeType(eps.Value, type));
                         else
                             ServiceSpecificParameters.Add(eps.Key, eps.Value);
@@ -492,7 +492,7 @@ namespace ClassLibNETStand_MES4FestoConnector
 
                 Dictionary<string, object> ExtractDataLongEncoding(string input)
                 {
-                    input.Remove(0, 4);
+                    input = input.Remove(0, 4);
 
                     var dataDictionary = new Dictionary<string, object>();
 
@@ -550,21 +550,6 @@ namespace ClassLibNETStand_MES4FestoConnector
                     else
                         return typeof(object);
 
-                }
-
-                Type GetTypeOfParameter(short type_identifer)
-                {
-                        switch (value)
-                        {
-                            case 1:
-                                return typeof(Int16);
-                            case 2:
-                                return typeof(Int32);
-                            case 3:
-                                return typeof(string);
-                            default:
-                                throw new ArgumentException("Incorrect value. It must be 1, 2 or 3.");
-                        }
                 }
             }
 
@@ -1037,6 +1022,8 @@ namespace ClassLibNETStand_MES4FestoConnector
         /// <exception cref="ServiceCallFailedException">Thrown when there is an issue with the TCP connection/stream or during the service call process.</exception>
         public void CallService(ServicePackage request_servicePackage, out ServicePackage response_servicePackage)
         {
+            Reconnect();
+
             if (serviceStream is null || serviceTCPClient is null || !serviceTCPClient.Connected)
                 Reconnect();
 
@@ -1405,7 +1392,6 @@ namespace ClassLibNETStand_MES4FestoConnector
                 disposed = true;
             }
         }
-
 
         /// <summary>
         /// Disposes the specified resource safely, handling any exceptions that might occur.

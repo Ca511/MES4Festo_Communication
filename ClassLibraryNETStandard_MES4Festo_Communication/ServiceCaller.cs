@@ -23,7 +23,7 @@ namespace ConsoleApp_MES4Connector
 
             ErrorState = (Int16)ResponseServicePackage.ErrorState;
 
-            StepNo = (Int16)ResponseServicePackage.StandardParameters["ResourceID"];
+            StepNo = (Int16)ResponseServicePackage.StandardParameters["StepNo"];
             OPos = (Int16)ResponseServicePackage.StandardParameters["OPos"];
             WPNo = (Int16)ResponseServicePackage.StandardParameters["WPNo"];
             ResourceID = (Int16)ResponseServicePackage.StandardParameters["ResourceID"];

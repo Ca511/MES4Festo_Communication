@@ -3,9 +3,8 @@ using System.Net.Sockets;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace ClassLibNETStand_MES4FestoConnector
+namespace ConsoleApp1
 {
-
     /// <summary>
     /// Represents a connector to communicate with the MES4 system of Festo. 
     /// This class provides functionalities to connect, send and receive messages, and handle service packages.
@@ -530,9 +529,9 @@ namespace ClassLibNETStand_MES4FestoConnector
 
                 Type GetTypeOfParameter(KeyValuePair<string, object> kvp)
                 {
-                    if (HeaderGetDic.Contains(kvp.Key))
+                    if (HeaderSendDic.Contains(kvp.Key))
                     {
-                        HeaderData headerData = HeaderGetDic[kvp.Key] as HeaderData ?? throw new ArgumentNullException(kvp.Key.ToString(), "Could not find Value-Key in HeaderGet");
+                        HeaderData headerData = HeaderSendDic[kvp.Key] as HeaderData ?? throw new ArgumentNullException(kvp.Key.ToString(), "Could not find Value-Key in HeaderGet");
 
                         if (headerData is not null)
                             return headerData.Type switch
